@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using dotnetapp.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace dotnetapp.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OptionController : ControllerBase
+    {
+        private readonly LoanApplicationDbContext _context;
+
+        public OptionController(LoanApplicationDbContext context)
+        {
+            _context=context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Option>>>GetAllOptions(){
+            return Ok(await _context.Options.ToListAsync());
+        }
+
+        [HttpGet("LoanTypes")]
+        public async Task<ActionResult<IEnumerable<string>>>GetLoanTypes(){
+            return Ok(await _context.Options.Select(o => 
+            o.LoanType).Distinct().ToListAsync()
+            );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddOption(Option option){
+            _context.Options.Add(option);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOption(int id){
+            var option = await _context.Options.FindAsync(id);
+            if(option==null){
+                return NotFound("Not a valid Option id");
+            }
+            _context.Options.Remove(option);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+    }
+}

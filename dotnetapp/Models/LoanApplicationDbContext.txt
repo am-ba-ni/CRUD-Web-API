@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace dotnetapp.Models
+{
+    public class LoanApplicationDbContext :DbContext
+    {
+        public DbSet<Option> Options {get;set;}
+        public DbSet<LoanApplication> LoanApplications {get;set;}
+        public LoanApplicationDbContext(DbContextOptions options):base(options)
+        {
+            
+        }
+
+    }
+}

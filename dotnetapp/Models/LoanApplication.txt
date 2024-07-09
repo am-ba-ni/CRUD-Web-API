@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+
+namespace dotnetapp.Models
+{
+    public class LoanApplication
+    {
+        [Key]
+        public int LoanApplicationID { get; set; }
+        public string Name { get; set; }
+        public string  RequestedAmount { get; set; }
+        public string  SubmissionDate { get; set; }
+        public string EmploymentStatus { get; set; }
+        public decimal Income { get; set; }
+        public int CreditScore { get; set; }
+        public string LoanType { get; set; }
+    }
+}

@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using dotnetapp.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace dotnetapp.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class LoanApplicationController : ControllerBase
+    {
+        private readonly LoanApplicationDbContext _context;
+
+        public LoanApplicationController(LoanApplicationDbContext context){
+            _context = context;
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LoanApplication>>>GetAllLoanApplications(){
+            return Ok(await _context.LoanApplications.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddLoanApplication(LoanApplication loanApplication){
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+
+            _context.LoanApplications.Add(loanApplication);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLoanApplication(int id){
+            var loanApplication = await _context.LoanApplications.FindAsync(id);
+            if(loanApplication == null){
+                return NotFound("Not a valid LoanApplication id");
+            }
+            _context.LoanApplications.Remove(loanApplication);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+    }
+}
